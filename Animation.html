@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Animated Webpage </title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 200px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      font-size: 16px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .welcome {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #555;
+    }
+
+    /* Ball styles */
+    .ball-container {
+      margin: 40px auto;
+      width: 100px;
+      height: 300px;
+      position: relative;
+    }
+
+    .ball {
+      width: 50px;
+      height: 50px;
+      background-color: #ff4081;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+    }
+
+    /* Animation */
+    @keyframes bounce {
+      0%, 100% {
+        bottom: 0;
+      }
+      50% {
+        bottom: 200px;
+      }
+    }
+
+    .animate {
+      animation: bounce 1s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Animated Page</h1>
+
+  <div>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button id="saveBtn">Save Name</button>
+  </div>
+  <div class="welcome" id="welcomeMessage"></div>
+
+  <div class="ball-container">
+    <div class="ball" id="ball"></div>
+  </div>
+  <button id="animateBtn">Start Bouncing!</button>
+
+  <script>
+    const nameInput = document.getElementById('nameInput');
+    const saveBtn = document.getElementById('saveBtn');
+    const welcomeMsg = document.getElementById('welcomeMessage');
+
+    // Load name from localStorage
+    window.onload = function() {
+      const savedName = localStorage.getItem('username');
+      if (savedName) {
+        welcomeMsg.textContent = `Welcome back, ${savedName}!`;
+      }
+    };
+
+    // Save name to localStorage
+    saveBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      if (name) {
+        localStorage.setItem('username', name);
+        welcomeMsg.textContent = `Welcome, ${name}!`;
+        nameInput.value = '';
+      }
+    });
+
+    // Animate the ball
+    const ball = document.getElementById('ball');
+    const animateBtn = document.getElementById('animateBtn');
+
+    animateBtn.addEventListener('click', () => {
+      ball.classList.toggle('animate');
+      animateBtn.textContent = ball.classList.contains('animate') 
+        ? 'Stop Bouncing' 
+        : 'Start Bouncing!';
+    });
+  </script>
+</body>
+</html>
