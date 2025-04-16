@@ -3,122 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Animated Webpage </title>
+  <title>User Preferences & Animation</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f8ff;
+      font-family: sans-serif;
       margin: 0;
       padding: 40px;
-      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .light-theme {
+      background-color: #f9f9f9;
+      color: #222;
+    }
+
+    .dark-theme {
+      background-color: #222;
+      color: #f9f9f9;
     }
 
     h1 {
-      color: #333;
+      text-align: center;
     }
 
-    input[type="text"] {
-      padding: 10px;
-      width: 200px;
-      font-size: 16px;
-      margin-top: 10px;
+    .controls {
+      text-align: center;
+      margin-bottom: 30px;
     }
 
     button {
       padding: 10px 20px;
-      margin-top: 15px;
+      margin: 10px;
       font-size: 16px;
-      background-color: #0077cc;
-      color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
 
-    .welcome {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #555;
-    }
-
-    /* Ball styles */
-    .ball-container {
-      margin: 40px auto;
+    .box {
       width: 100px;
-      height: 300px;
-      position: relative;
-    }
-
-    .ball {
-      width: 50px;
-      height: 50px;
-      background-color: #ff4081;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
+      height: 100px;
+      margin: 30px auto;
+      background-color: #007bff;
+      border-radius: 10px;
     }
 
     /* Animation */
-    @keyframes bounce {
-      0%, 100% {
-        bottom: 0;
-      }
-      50% {
-        bottom: 200px;
-      }
+    @keyframes spin {
+      from { transform: rotate(0); }
+      to { transform: rotate(360deg); }
     }
 
-    .animate {
-      animation: bounce 1s ease-in-out infinite;
+    .spin {
+      animation: spin 1s linear;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to the Animated Page</h1>
+  <h1>Theme & Animation Demo</h1>
 
-  <div>
-    <input type="text" id="nameInput" placeholder="Enter your name">
-    <button id="saveBtn">Save Name</button>
+  <div class="controls">
+    <button id="lightBtn">Light Theme</button>
+    <button id="darkBtn">Dark Theme</button>
+    <button id="animateBtn">Spin the Box</button>
   </div>
-  <div class="welcome" id="welcomeMessage"></div>
 
-  <div class="ball-container">
-    <div class="ball" id="ball"></div>
-  </div>
-  <button id="animateBtn">Start Bouncing!</button>
+  <div class="box" id="box"></div>
 
   <script>
-    const nameInput = document.getElementById('nameInput');
-    const saveBtn = document.getElementById('saveBtn');
-    const welcomeMsg = document.getElementById('welcomeMessage');
-
-    // Load name from localStorage
-    window.onload = function() {
-      const savedName = localStorage.getItem('username');
-      if (savedName) {
-        welcomeMsg.textContent = `Welcome back, ${savedName}!`;
-      }
-    };
-
-    // Save name to localStorage
-    saveBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      if (name) {
-        localStorage.setItem('username', name);
-        welcomeMsg.textContent = `Welcome, ${name}!`;
-        nameInput.value = '';
-      }
-    });
-
-    // Animate the ball
-    const ball = document.getElementById('ball');
+    const lightBtn = document.getElementById('lightBtn');
+    const darkBtn = document.getElementById('darkBtn');
+    const box = document.getElementById('box');
     const animateBtn = document.getElementById('animateBtn');
 
+    // Apply saved theme on load
+    function applyTheme(theme) {
+      document.body.classList.remove('light-theme', 'dark-theme');
+      document.body.classList.add(theme);
+    }
+
+    function saveTheme(theme) {
+      localStorage.setItem('preferredTheme', theme);
+      applyTheme(theme);
+    }
+
+    // Load theme from localStorage
+    const savedTheme = localStorage.getItem('preferredTheme');
+    if (savedTheme) {
+      applyTheme(savedTheme);
+    } else {
+      applyTheme('light-theme'); // default
+    }
+
+    // Button listeners
+    lightBtn.addEventListener('click', () => saveTheme('light-theme'));
+    darkBtn.addEventListener('click', () => saveTheme('dark-theme'));
+
+    // Animation trigger
     animateBtn.addEventListener('click', () => {
-      ball.classList.toggle('animate');
-      animateBtn.textContent = ball.classList.contains('animate') 
-        ? 'Stop Bouncing' 
-        : 'Start Bouncing!';
+      box.classList.remove('spin'); // restart animation
+      void box.offsetWidth; // force reflow
+      box.classList.add('spin');
     });
   </script>
 </body>
